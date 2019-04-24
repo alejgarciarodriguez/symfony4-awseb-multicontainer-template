@@ -1,0 +1,77 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "volumes": [
+        {
+            "name": "source",
+            "host": {
+                "sourcePath": "/var/app/current/."
+            }
+        },
+        {
+            "name": "nginx-conf",
+            "host": {
+                "sourcePath": "/var/app/current/docker-config/nginx/conf.d"
+            }
+        },
+        {
+            "name": "php.ini",
+            "host": {
+                "sourcePath": "/var/app/current/php-fpm/php.ini"
+            }
+        }
+    ],
+    "containerDefinitions": [
+        {
+            "name": "php",
+            "image": "alexgarciahealiostech/php-72-fpm",
+            "environment": [
+                {
+                    "name": "Container",
+                    "value": "PHP"
+                }
+            ],
+            "essential": true,
+            "memory": 128,
+            "mountPoints": [
+                {
+                    "sourceVolume": "source",
+                    "containerPath": "/var/www/html"
+                },
+                {
+                    "sourceVolume": "php.ini",
+                    "containerPath": "/usr/local/etc/php/php.ini",
+                    "readOnly": true
+                }
+            ]
+        }, 
+        {
+        "name": "nginx",
+        "image": "nginx",
+        "essential": true,
+        "memory": 128,
+        "portMappings": [
+            {
+                "hostPort": 80,
+                "containerPort": 80
+            }
+        ],
+        "links": [
+            "php"
+        ],
+        "mountPoints": [
+            {
+                "sourceVolume": "source",
+                "containerPath": "/var/www/html"
+            },
+            {
+                "sourceVolume": "nginx-conf",
+                "containerPath": "/etc/nginx/conf.d",
+                "readOnly": true
+            },
+            {
+                "sourceVolume": "awseb-logs-nginx-proxy",
+                "containerPath": "/var/log/nginx"
+            }
+        ]
+    }]
+}
