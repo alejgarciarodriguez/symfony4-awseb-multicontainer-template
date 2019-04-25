@@ -23,7 +23,7 @@
     "containerDefinitions": [
         {
             "name": "php",
-            "image": "alexgarciahealiostech/php-72-fpm",
+            "image": "alejgarciarodriguez/php72-fpm",
             "environment": [
                 {
                     "name": "Container",
